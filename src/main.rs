@@ -11,7 +11,9 @@ struct Args {
 async fn main() {
     let args = Args::parse();
 
-    let app = Router::new().route("/", get(|| async { "Hello, world!" }));
+    let app = Router::new()
+        .route("/", get(|| async { "Hello, world!" }))
+        .route("/health", get(|| async {}));
 
     println!("Running at 0.0.0.0:{}", args.port);
     axum::Server::bind(&format!("0.0.0.0:{}", args.port).parse().unwrap())
