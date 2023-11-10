@@ -37,12 +37,14 @@
           hwaas-image =
             pkgs.dockerTools.buildLayeredImage {
               name = "hwaas";
+              tag = "latest";
               config.Entrypoint = [ "${packages.hwaas}/bin/hwaas" ];
             };
 
           hwaas-stream-image =
             pkgs.dockerTools.streamLayeredImage {
               name = "hwaas";
+              tag = "latest";
               config.Entrypoint = [ "${packages.hwaas}/bin/hwaas" ];
             };
         };
