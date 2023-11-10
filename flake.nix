@@ -47,6 +47,8 @@
             };
         };
 
+        checks = packages // { devShell = devShells.default; };
+
         devShells.default = crane.devShell {
           inputsFrom = [ packages.hwaas ];
         };
