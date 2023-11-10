@@ -18,8 +18,8 @@
         crane = inputs.crane.lib.${system};
       in
       rec {
-        packages = rec {
-          default = hwaas;
+        packages = {
+          default = packages.hwaas;
 
           hwaas =
             let
@@ -37,13 +37,13 @@
           hwaas-image =
             pkgs.dockerTools.buildLayeredImage {
               name = "hwaas";
-              config.Entrypoint = [ "${hwaas}/bin/hwaas" ];
+              config.Entrypoint = [ "${packages.hwaas}/bin/hwaas" ];
             };
 
           hwaas-stream-image =
             pkgs.dockerTools.streamLayeredImage {
               name = "hwaas";
-              config.Entrypoint = [ "${hwaas}/bin/hwaas" ];
+              config.Entrypoint = [ "${packages.hwaas}/bin/hwaas" ];
             };
         };
 
