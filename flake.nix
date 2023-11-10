@@ -33,6 +33,18 @@
               cargoArtifacts = crane.buildDepsOnly common;
             in
             crane.buildPackage (common // { inherit cargoArtifacts; });
+
+          hwaas-image =
+            pkgs.dockerTools.buildLayeredImage {
+              name = "hwaas";
+              config.Entrypoint = [ "${hwaas}/bin/hwaas" ];
+            };
+
+          hwaas-stream-image =
+            pkgs.dockerTools.streamLayeredImage {
+              name = "hwaas";
+              config.Entrypoint = [ "${hwaas}/bin/hwaas" ];
+            };
         };
 
         devShells.default = crane.devShell {
