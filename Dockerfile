@@ -1,11 +1,22 @@
-FROM rust:1.73.0-alpine as builder
-RUN apk add --no-cache musl-dev pkgconf
-ENV SYSROOT=/dummy
-WORKDIR /workdir
-COPY . .
-RUN cargo build --bins --release
+FROM rust:1.73.0 as builder
 
-FROM scratch
-COPY --from=builder  /workdir/target/release/hwaas /
+WORKDIR /app
+
+# Build dependencies
+COPY Cargo.toml Cargo.lock /app
+RUN \
+  mkdir src && \
+  echo 'fn main() {}' > src/main.rs && \
+  cargo build --release && \
+  rm -rf src
+
+# Build app
+COPY src /app/src
+RUN \
+  touch src/main.rs && \
+  cargo build --bins --release
+
+FROM gcr.io/distroless/cc-debian12
+COPY --from=builder /app/target/release/hwaas /usr/local/bin/
 EXPOSE 8080
-CMD ["./hwaas"]
+ENTRYPOINT ["/usr/local/bin/hwaas"]
